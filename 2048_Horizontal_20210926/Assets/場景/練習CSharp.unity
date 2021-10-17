@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 675857326}
   - component: {fileID: 675857325}
   m_Layer: 0
-  m_Name: TX Village Props Barrel
+  m_Name: "\u6CB9\u7F50\u8ECA"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -153,6 +153,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfbe15c8a0d0d514e8720084004a1732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CC: 5000
+  weight: 10
+  brand: "\u8CD3\u58EB"
+  CarDoor: 50
+  haveSkyWindow: 0
+  colorRed: {r: 0.9622642, g: 0.16794233, b: 0.16794233, a: 1}
+  colorCustom: {r: 0, g: 0, b: 1, a: 1}
+  colorCustomAlpga: {r: 0, g: 1, b: 0, a: 0.3}
+  colorCustomAlpga255:
+    serializedVersion: 2
+    rgba: 1275133696
+  v2: {x: 0, y: 0}
+  v2One: {x: 1, y: 1}
+  v2Up: {x: 0, y: 1}
+  v3Custom: {x: 7, y: 9, z: 3}
+  v4Custom: {x: 7, y: 9, z: 3, w: 3.2}
+  kc: 0
+  kcCustom: 323
+  carbox: {fileID: 1118250104}
+  carOil: {fileID: 1118250104}
+  traBox: {fileID: 675857327}
+  sprBox: {fileID: 675857326}
+  cam: {fileID: 1425017954}
 --- !u!212 &675857326
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -212,7 +235,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 675857324}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0.55, y: 0.02, z: 0}
+  m_LocalPosition: {x: -0.5800004, y: 0.14, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -230,7 +253,7 @@ GameObject:
   - component: {fileID: 1118250106}
   - component: {fileID: 1118250105}
   m_Layer: 0
-  m_Name: TX Village Props Crate Small
+  m_Name: "\u7BB1\u578B\u8ECA"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -248,6 +271,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfbe15c8a0d0d514e8720084004a1732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CC: 2000
+  weight: 3.5
+  brand: BMW
+  CarDoor: 53
+  haveSkyWindow: 1
+  colorRed: {r: 1, g: 0, b: 0, a: 1}
+  colorCustom: {r: 0, g: 0, b: 1, a: 1}
+  colorCustomAlpga: {r: 0, g: 1, b: 0, a: 0.3}
+  colorCustomAlpga255:
+    serializedVersion: 2
+    rgba: 1275133696
+  v2: {x: 0, y: 0}
+  v2One: {x: 1, y: 1}
+  v2Up: {x: 0, y: 1}
+  v3Custom: {x: 7, y: 9, z: 3}
+  v4Custom: {x: 7, y: 9, z: 3, w: 3.2}
+  kc: 0
+  kcCustom: 323
+  carbox: {fileID: 0}
+  carOil: {fileID: 0}
+  traBox: {fileID: 0}
+  sprBox: {fileID: 0}
+  cam: {fileID: 0}
 --- !u!212 &1118250106
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -307,7 +353,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1118250104}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.11, y: -0.11, z: 0}
+  m_LocalPosition: {x: 0.95, y: -0.31, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
