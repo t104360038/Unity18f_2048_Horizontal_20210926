@@ -1,8 +1,11 @@
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class LearnIF : MonoBehaviour
 {
     public bool OpenDoor;
+    public int score = 99;
+
     private void Start()
     {
         // 耞Α if else
@@ -24,4 +27,25 @@ public class LearnIF : MonoBehaviour
             print("闽");
         }
     }
+    public void Update()
+    {
+        //狦だ计 >= 60 だ の
+        if (score >= 60)
+        {
+            print("の");
+        }
+        // 狦だ计 >= 40 干σ
+        //粂猭: else if (ガ狶) {ガ狶 true 磅︽}
+        // else if  if よ籔 else よ 礚絬
+        else if (score >= 40)
+        {
+            print("干σ");
+        }
+        // 狦だ计 < 40だ 讽
+        else
+        {
+            print("讽");
+        }
+    }
+
 }
