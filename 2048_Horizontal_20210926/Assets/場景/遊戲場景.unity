@@ -577,6 +577,8 @@ MonoBehaviour:
   - {fileID: 1398274245}
   - {fileID: 1526953837}
   - {fileID: 1261462463}
+  goNumberBlock: {fileID: 2937199001472596035, guid: d85decc041e772544875bb2bbba64eab, type: 3}
+  traCanvas2048: {fileID: 1748749539}
 --- !u!4 &117447271
 Transform:
   m_ObjectHideFlags: 0
