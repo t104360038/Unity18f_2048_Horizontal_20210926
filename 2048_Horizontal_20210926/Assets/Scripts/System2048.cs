@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
+using UnityEngine.Events;       // 引用 Unity 事件 命名空間
 /// <summary>
 /// 2048 系統
 /// 儲存每個區塊資料
@@ -19,6 +20,8 @@ public class System2048 : MonoBehaviour
     public GameObject goNumberBlock;
     [Header("畫布 2048")]
     public Transform traCanvas2048;
+    [Header("數字相同合併事件")]
+    public UnityEvent onSameNumberCombine;
     #endregion
 
     #region 欄位 : 私人
@@ -115,7 +118,7 @@ public class System2048 : MonoBehaviour
      //   print("為零的資料有幾筆 : " + equalZero.Count());
 
         int randomIndex = Random.Range(0, equalZero.Count());
-        print("隨機編號 : " + randomIndex);
+        // print("隨機編號 : " + randomIndex);
 
         // 選出隨機區塊 編號
         BlockData select = equalZero.ToArray()[randomIndex];
@@ -212,7 +215,8 @@ public class System2048 : MonoBehaviour
         BlockData blockCheck = new BlockData();     // 檢查旁邊的區塊
         bool canMove = false;                       // 是否可以移動區塊 p18.05
         bool sameNumber = false;                    // 是否相同數字 P18.06
-
+        int sameNumberCount = 0;                    //  p20.01
+        
         switch (direction)                          // buge p19.11
         {
             case Direction.None:
@@ -221,6 +225,8 @@ public class System2048 : MonoBehaviour
                 // 複製左滑比較快 ，i j 互換 p19.07
                 for (int i = 0; i < blocks.GetLength(1); i++)       //互換
                 {
+                    sameNumberCount = 0;
+
                     for (int j = 1; j < blocks.GetLength(0); j++)   //互換
                     {
                         blockOriginal = blocks[j, i];               //互換
@@ -228,7 +234,7 @@ public class System2048 : MonoBehaviour
                         // 如果 該區域的數字 為零 就繼續 (跳過此迴圈執行下個迴圈)
                         if (blockOriginal.number == 0) continue;
 
-                        for (int k = j - 1; k >= 0; k--)            //print("檢查次數: " + k);
+                        for (int k = j - 1; k >= 0 + sameNumberCount; k--)            //print("檢查次數: " + k);
                         {
                             if (blocks[k, i].number == 0)           // 空值時移動
                             {
@@ -238,10 +244,12 @@ public class System2048 : MonoBehaviour
                             else if (blocks[k, i].number == blockOriginal.number)
                             {
                                 blockCheck = blocks[k, i];
+                                canMove = true;
+                                sameNumber = true;
+                                sameNumberCount++;
                             }
                             else if (blocks[k, i].number != blockOriginal.number)
                             {
-                                canMove = false;
                                 break;
                             }
                         }
@@ -260,13 +268,15 @@ public class System2048 : MonoBehaviour
                 // 複製上 p19.08
                 for (int i = 0; i < blocks.GetLength(1); i++)       
                 {
+                    sameNumberCount = 0;
+
                     for (int j = blocks.GetLength(0) -2; j >= 0; j--)   // 改
                     {
                         blockOriginal = blocks[j, i];
                         // 空值則跳過
                         if (blockOriginal.number == 0) continue;
 
-                        for (int k = j + 1; k < blocks.GetLength(0); k++)            // 改
+                        for (int k = j + 1; k < blocks.GetLength(0)　- sameNumberCount; k++)            // 改
                         {
                             if (blocks[k, i].number == 0)           
                             {
@@ -277,10 +287,11 @@ public class System2048 : MonoBehaviour
                             {
                                 blockCheck = blocks[k, i];
                                 canMove = true;
+                                sameNumber = true;
+                                sameNumberCount++;
                             }
                             else if (blocks[k, i].number != blockOriginal.number)
                             {
-                                canMove = false;
                                 break;
                             }
                         }
@@ -298,6 +309,8 @@ public class System2048 : MonoBehaviour
                 // 檢查左邊有無數字  // p.18.01
                 for (int i = 0; i < blocks.GetLength(0); i++)
                 {
+                    sameNumberCount = 0;
+
                     for (int j = 1; j < blocks.GetLength(1); j++)
                     {
                         blockOriginal = blocks[i,j];
@@ -305,7 +318,7 @@ public class System2048 : MonoBehaviour
                         // 如果 該區域的數字 為零 就繼續 (跳過此迴圈執行下個迴圈)
                         if (blockOriginal.number == 0) continue;
 
-                        for (int k = j - 1; k >= 0; k--)            //print("檢查次數: " + k);
+                        for (int k = j - 1; k >= 0 + sameNumberCount; k--)            //print("檢查次數: " + k);
                         {
                             if (blocks[i, k].number == 0)           // 空值時移動
                             {
@@ -316,11 +329,12 @@ public class System2048 : MonoBehaviour
                             {
                                 blockCheck = blocks[i, k];
                                 canMove = true;
+                                sameNumber = true;
+                                sameNumberCount++;
                             }
                             // 否則 如果 檢查區塊的數字 與 原本區塊的數字 不相同 就不移動，(數字不同直接中斷)
                             else if (blocks[i, k].number != blockOriginal.number)
                             {
-                                canMove = false;
                                 break;
                             }
                         }
@@ -337,6 +351,8 @@ public class System2048 : MonoBehaviour
             case Direction.Right:
                 for (int i = 0; i < blocks.GetLength(0); i++)
                 {
+                    sameNumberCount = 0;
+
                     for (int j = blocks.GetLength(1)-2; j >= 0 ; j--) //從左邊開始檢查，長度-1，p19.06
                     {
                         blockOriginal = blocks[i, j];
@@ -344,7 +360,7 @@ public class System2048 : MonoBehaviour
                         // 如果 該區域的數字 為零 就繼續 (跳過此迴圈執行下個迴圈)
                         if (blockOriginal.number == 0) continue;
 
-                        for (int k = j + 1; k < blocks.GetLength(1); k++)   // 物件向右移動，p19.06
+                        for (int k = j + 1; k < blocks.GetLength(1) - sameNumberCount; k++)   // 物件向右移動，p19.06
                         {
                             if (blocks[i, k].number == 0)           // 空值時移動
                             {
@@ -356,10 +372,11 @@ public class System2048 : MonoBehaviour
                                 blockCheck = blocks[i, k];
                                 canMove = true;
                                 sameNumber = true;
+                                sameNumber = true;
+                                sameNumberCount++;
                             }
                             else if (blocks[i, k].number != blockOriginal.number)
                             {
-                                canMove = false;
                                 break;
                             }
                         }
@@ -401,6 +418,9 @@ public class System2048 : MonoBehaviour
 
             Destroy(blockOriginal.goBlock);     //刪掉原物件 p18.07
             blockCheck.goBlock.transform.Find("數字").GetComponent<Text>().text = newNumber.ToString();// 更新文字 p18.07 
+
+            // 相同數字合併事件 觸發
+            onSameNumberCombine.Invoke();       //p20.05
         }
         else                                    //p18.07
         {
