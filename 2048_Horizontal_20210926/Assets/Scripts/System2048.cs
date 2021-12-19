@@ -21,13 +21,22 @@ public class System2048 : MonoBehaviour
     [Header("畫布 2048")]
     public Transform traCanvas2048;
     [Header("數字相同合併事件")]
-    public UnityEvent onSameNumberCombine;
+    public OnSameNumberCombine onSameNumberCombine;                 //p23.07
+    [Header("敵人回合事件")]
+    public UnityEvent onEnemyTurn;                                  //p22.07
     #endregion
+
+    // 系統 序列化 : 將類別資料顯示在屬性面板上
+    [System.Serializable]
+    // 帶參數的事件<參數類型>
+    public class OnSameNumberCombine : UnityEvent<float> { }        //p23.07
 
     #region 欄位 : 私人
     // 私人欄位顯示在屬性面板上
     [SerializeField]
     private Direction direction;
+    [SerializeField]
+    private StateTurn stateTurn;                        // p22.05
     /// <summary>
     /// 所有區塊資料
     /// 因為資料太多，用類別包裝
@@ -54,12 +63,13 @@ public class System2048 : MonoBehaviour
     {
         Initialized();
     }
+
+    private void Update()                       // p22.05
+    {
+        if (stateTurn == StateTurn.My) CheckDirection();    // p22.05
+    }
     #endregion
 
-    private void Update()
-    {
-        CheckDirection();
-    }
     #region 方法:私人
     /// <summary>
     /// 初始化資料
@@ -205,6 +215,8 @@ public class System2048 : MonoBehaviour
         }
         #endregion
     }
+
+
     /// <summary>
     /// 檢查並移動區塊
     /// </summary>
@@ -216,6 +228,7 @@ public class System2048 : MonoBehaviour
         bool canMove = false;                       // 是否可以移動區塊 p18.05
         bool sameNumber = false;                    // 是否相同數字 P18.06
         int sameNumberCount = 0;                    //  p20.01
+        bool canMoveBlockAll = false;               //  是否全部可以移動區塊  p21.06
         
         switch (direction)                          // buge p19.11
         {
@@ -257,6 +270,7 @@ public class System2048 : MonoBehaviour
 
                         if (canMove)
                         {
+                            canMoveBlockAll = true;                     // 全部區塊內可以移動
                             canMove = false;
                             MoveBlock(blockOriginal, blockCheck, sameNumber);
                             sameNumber = false;
@@ -298,6 +312,7 @@ public class System2048 : MonoBehaviour
                         // 如果 可以移動 再執行 移動區塊(原始、檢查、是否相同數字)
                         if (canMove)
                         {
+                            canMoveBlockAll = true;
                             canMove = false;
                             MoveBlock(blockOriginal, blockCheck, sameNumber);
                             sameNumber = false;
@@ -341,6 +356,7 @@ public class System2048 : MonoBehaviour
                         // 如果 可以移動 再執行 移動區塊(原始、檢查、是否相同數字)
                         if (canMove)
                         {
+                            canMoveBlockAll = true;
                             canMove = false;
                             MoveBlock(blockOriginal, blockCheck, sameNumber);
                             sameNumber = false;
@@ -383,6 +399,7 @@ public class System2048 : MonoBehaviour
                         // 如果 可以移動 再執行 移動區塊(原始、檢查、是否相同數字)
                         if (canMove)
                         {
+                            canMoveBlockAll = true;
                             canMove = false;
                             MoveBlock(blockOriginal, blockCheck, sameNumber);
                             sameNumber = false;
@@ -393,7 +410,17 @@ public class System2048 : MonoBehaviour
             default:
                 break;
         }
-        CreateRandomNumber();                       // 移動後再生成新區塊
+
+        if (canMoveBlockAll)
+        {
+            onEnemyTurn.Invoke();                       //p22.07
+            stateTurn = StateTurn.Enemy;
+            CreateRandomNumber();                       // 移動後再生成新區塊
+        }
+        else
+        {
+            print("不能移動");
+        }
     }
     #endregion
 
@@ -413,16 +440,16 @@ public class System2048 : MonoBehaviour
 
         if (sameNumber)                         //p18.06
         {
-            int newNumber = blockOriginal.number * 2;
-            blockCheck.number = newNumber;
+            int number = blockOriginal.number * 2;
+            blockCheck.number = number;
 
             Destroy(blockOriginal.goBlock);     //刪掉原物件 p18.07
-            blockCheck.goBlock.transform.Find("數字").GetComponent<Text>().text = newNumber.ToString();// 更新文字 p18.07 
+            blockCheck.goBlock.transform.Find("數字").GetComponent<Text>().text = number.ToString();// 更新文字 p18.07 
 
             // 相同數字合併事件 觸發
-            onSameNumberCombine.Invoke();       //p20.05
+            onSameNumberCombine.Invoke(number);       //p20.05 //p23.07
         }
-        else                                    //p18.07
+        else                                            //p18.07
         {
             blockCheck.number = blockOriginal.number;
             blockCheck.goBlock = blockOriginal.goBlock;
@@ -432,7 +459,18 @@ public class System2048 : MonoBehaviour
         #endregion
         PrintBlockData();
     }
+
+    #region 方法: 公開                      // p22.10
+    /// <summary>
+    /// 切換到我方回合
+    /// </summary>
+    public void ChangeToMyTurn()
+    {
+        stateTurn = StateTurn.My;
+    }
+    #endregion
 }
+
 /// <summary>
 /// 區塊資料
 /// 每個區塊遊戲物件、座標、編號、數字
@@ -450,4 +488,9 @@ public class BlockData
 public enum Direction
 {
     None, Up, Down, Left, Right
+}
+
+public enum StateTurn                                   // p22.05
+{
+    My ,Enemy
 }

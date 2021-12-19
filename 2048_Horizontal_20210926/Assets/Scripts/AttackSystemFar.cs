@@ -17,16 +17,21 @@ public class AttackSystemFar : AttackSystem
     #endregion
 
     // overide 複寫 : 複寫複類別 virtual 成員
-    public override void Attack()
+    public override void Attack(float increase = 0)             //p23.08
     {
-        base.Attack();              // base 基底: 複類別的內容
+        //base.Attack();              // base 基底: 複類別的內容
+
+        onAttackStart.Invoke();                                 //p23.05
 
         // 生成(物件，座標，角度)生成的物件名稱後方會有(clone)       //p21.04
-        //  
+        //  生成的物件名稱後方會有 (Clone)
         //  Quaternion 四元數，紀錄角度
         //  identity 零角度
         GameObject tempAttack = Instantiate(goAttackParticle, positionSpawn.position, Quaternion.identity);
         tempAttack.GetComponent<Rigidbody2D>().AddForce(new Vector2(speed, 0));           //p21.05
+        // 添加元件<子彈系統>().攻擊力 = 此攻擊系統攻擊力              //p22.03
+        tempAttack.AddComponent<Bullet>().attack = attack + increase;//p23.08
 
+        print("本次攻擊力: " + (attack + increase));
     }
 } 
